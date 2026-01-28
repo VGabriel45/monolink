@@ -17,7 +17,7 @@ export async function watchCommand(
 ): Promise<void> {
   const debounceMs = options.debounce || 300;
   
-  console.log(chalk.cyan(`\n👀 linkr watch: ${packageName}\n`));
+  console.log(chalk.cyan(`\n👀 monolink watch: ${packageName}\n`));
   
   // Get registered package
   const pkg = getRegisteredPackage(packageName);
@@ -25,7 +25,7 @@ export async function watchCommand(
   if (!pkg) {
     console.log(chalk.red(`✗ Package "${packageName}" is not registered`));
     console.log(chalk.gray('\nTo register a package, run in the source monorepo:'));
-    console.log(chalk.cyan(`  npx linkr register ${packageName}`));
+    console.log(chalk.cyan(`  npx monolink register ${packageName}`));
     process.exit(1);
   }
   

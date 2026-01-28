@@ -17,7 +17,7 @@ export async function useCommand(
 ): Promise<void> {
   const cwd = process.cwd();
   
-  console.log(chalk.cyan(`\n🔗 linkr use: ${packageName}\n`));
+  console.log(chalk.cyan(`\n🔗 monolink use: ${packageName}\n`));
   
   // Get registered package
   const pkg = getRegisteredPackage(packageName);
@@ -25,7 +25,7 @@ export async function useCommand(
   if (!pkg) {
     console.log(chalk.red(`✗ Package "${packageName}" is not registered`));
     console.log(chalk.gray('\nTo register a package, run in the source monorepo:'));
-    console.log(chalk.cyan(`  npx linkr register ${packageName}`));
+    console.log(chalk.cyan(`  npx monolink register ${packageName}`));
     process.exit(1);
   }
   
@@ -71,5 +71,5 @@ export async function useCommand(
   
   console.log(chalk.green(`\n✓ Successfully linked ${packageName}`));
   console.log(chalk.gray('\nTo unlink, run:'));
-  console.log(chalk.cyan(`  npx linkr unuse ${packageName}`));
+  console.log(chalk.cyan(`  npx monolink unuse ${packageName}`));
 }

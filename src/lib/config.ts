@@ -3,8 +3,8 @@ import path from 'node:path';
 import type { LinkConfig, RegisteredPackage, PackageJson } from '../types.js';
 import { readPackageJson, writePackageJson } from './workspace.js';
 
-const LINKR_MARKER = '// linkr-managed';
-const LINKR_CONFIG_FILE = '.linkr-local.json';
+const LINKR_MARKER = '// monolink-managed';
+const LINKR_CONFIG_FILE = '.monolink-local.json';
 
 interface LocalLinkConfig {
   linkedPackages: string[];

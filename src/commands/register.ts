@@ -18,7 +18,7 @@ export async function registerCommand(
 ): Promise<void> {
   const cwd = process.cwd();
   
-  console.log(chalk.cyan(`\n🔗 linkr register: ${packageName}\n`));
+  console.log(chalk.cyan(`\n🔗 monolink register: ${packageName}\n`));
   
   // Find monorepo root
   const monorepoRoot = findMonorepoRoot(cwd);
@@ -75,5 +75,5 @@ export async function registerCommand(
   
   console.log(chalk.green(`\n✓ Successfully registered ${packageName}`));
   console.log(chalk.gray(`\nTo link this package in another project, run:`));
-  console.log(chalk.cyan(`  npx linkr use ${packageName}`));
+  console.log(chalk.cyan(`  npx monolink use ${packageName}`));
 }

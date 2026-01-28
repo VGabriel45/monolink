@@ -1,4 +1,4 @@
-# linkr
+# monolink
 
 A CLI tool to simplify local pnpm package linking in monorepos.
 
@@ -12,16 +12,16 @@ When linking a monorepo package locally:
 
 ## The Solution
 
-**linkr** automates the entire process with simple commands.
+**monolink** automates the entire process with simple commands.
 
 ## Installation
 
 ```bash
 # Install globally
-npm install -g linkr
+npm install -g monolink
 
 # Or use with npx
-npx linkr <command>
+npx monolink <command>
 ```
 
 ## Quick Start
@@ -30,7 +30,7 @@ npx linkr <command>
 
 ```bash
 cd ~/projects/my-monorepo
-npx linkr register my-package
+npx monolink register my-package
 ```
 
 This will:
@@ -42,7 +42,7 @@ This will:
 
 ```bash
 cd ~/projects/my-app
-npx linkr use my-package
+npx monolink use my-package
 ```
 
 This will:
@@ -52,37 +52,37 @@ This will:
 ### 3. Unlink When Done
 
 ```bash
-npx linkr unuse my-package
+npx monolink unuse my-package
 ```
 
 ## Commands
 
-### `linkr register <package>`
+### `monolink register <package>`
 
 Register a package from a pnpm monorepo for local linking.
 
 ```bash
-linkr register 0xtrails
+monolink register 0xtrails
 
 # Skip building
-linkr register 0xtrails --no-build
+monolink register 0xtrails --no-build
 ```
 
 **What it does:**
 1. Finds the monorepo root (via `pnpm-workspace.yaml`)
 2. Scans for all `workspace:*` dependencies (recursively)
 3. Builds all packages in topological order
-4. Saves package info to `~/.linkr/manifest.json`
+4. Saves package info to `~/.monolink/manifest.json`
 
-### `linkr use <package>`
+### `monolink use <package>`
 
 Link a registered package to your current project.
 
 ```bash
-linkr use 0xtrails
+monolink use 0xtrails
 
 # Skip pnpm install
-linkr use 0xtrails --no-install
+monolink use 0xtrails --no-install
 ```
 
 **What it does:**
@@ -90,43 +90,43 @@ linkr use 0xtrails --no-install
 2. Adds `pnpm.overrides` to your `package.json`
 3. Runs `pnpm install`
 
-### `linkr unuse <package>`
+### `monolink unuse <package>`
 
 Remove a linked package from your project.
 
 ```bash
-linkr unuse 0xtrails
+monolink unuse 0xtrails
 
 # Skip pnpm install
-linkr unuse 0xtrails --no-install
+monolink unuse 0xtrails --no-install
 ```
 
 **What it does:**
 1. Removes `pnpm.overrides` for the package
-2. Cleans up `.linkr-local.json`
+2. Cleans up `.monolink-local.json`
 3. Runs `pnpm install`
 
-### `linkr list`
+### `monolink list`
 
 List all registered packages.
 
 ```bash
 # List all registered packages
-linkr list
+monolink list
 
 # List packages linked in current project
-linkr list --local
+monolink list --local
 ```
 
-### `linkr watch <package>`
+### `monolink watch <package>`
 
 Watch and rebuild a registered package on source changes.
 
 ```bash
-linkr watch 0xtrails
+monolink watch 0xtrails
 
 # Custom debounce delay
-linkr watch 0xtrails --debounce 500
+monolink watch 0xtrails --debounce 500
 ```
 
 **What it does:**
@@ -140,7 +140,7 @@ linkr watch 0xtrails --debounce 500
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ npx linkr register my-package                               │
+│ npx monolink register my-package                            │
 ├─────────────────────────────────────────────────────────────┤
 │ 1. Find pnpm-workspace.yaml                                 │
 │ 2. Parse workspace patterns                                 │
@@ -148,7 +148,7 @@ linkr watch 0xtrails --debounce 500
 │ 4. Recursively collect all transitive deps                  │
 │ 5. Topological sort for build order                         │
 │ 6. Build each package in order                              │
-│ 7. Save to ~/.linkr/manifest.json                           │
+│ 7. Save to ~/.monolink/manifest.json                        │
 └─────────────────────────────────────────────────────────────┘
 ```
 
@@ -156,12 +156,12 @@ linkr watch 0xtrails --debounce 500
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│ npx linkr use my-package                                    │
+│ npx monolink use my-package                                 │
 ├─────────────────────────────────────────────────────────────┤
-│ 1. Read ~/.linkr/manifest.json                              │
+│ 1. Read ~/.monolink/manifest.json                           │
 │ 2. Generate pnpm.overrides config                           │
 │ 3. Update target package.json                               │
-│ 4. Create .linkr-local.json (tracks linked packages)        │
+│ 4. Create .monolink-local.json (tracks linked packages)     │
 │ 5. Run pnpm install                                         │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -187,10 +187,10 @@ my-monorepo/
 ```bash
 # In the monorepo
 cd my-monorepo
-linkr register @myorg/sdk
+monolink register @myorg/sdk
 
 # Output:
-# 🔗 linkr register: @myorg/sdk
+# 🔗 monolink register: @myorg/sdk
 # 
 # Workspace dependencies:
 #   • @myorg/utils
@@ -210,7 +210,7 @@ linkr register @myorg/sdk
 
 # In your app
 cd ~/my-app
-linkr use @myorg/sdk
+monolink use @myorg/sdk
 
 # Your package.json now has:
 # {
@@ -226,14 +226,14 @@ linkr use @myorg/sdk
 
 ## Files
 
-- `~/.linkr/manifest.json` - Global registry of packages
-- `.linkr-local.json` - Per-project tracking (add to `.gitignore`)
+- `~/.monolink/manifest.json` - Global registry of packages
+- `.monolink-local.json` - Per-project tracking (add to `.gitignore`)
 
 ## Tips
 
-1. **Add `.linkr-local.json` to your `.gitignore`** - It's project-specific state
-2. **Re-register after major changes** - Run `linkr register` again to rebuild
-3. **Use watch mode during development** - `linkr watch` rebuilds automatically
+1. **Add `.monolink-local.json` to your `.gitignore`** - It's project-specific state
+2. **Re-register after major changes** - Run `monolink register` again to rebuild
+3. **Use watch mode during development** - `monolink watch` rebuilds automatically
 4. **Multiple packages** - You can link multiple packages in the same project
 
 ## Requirements
@@ -244,4 +244,3 @@ linkr use @myorg/sdk
 ## License
 
 MIT
-# linkr

@@ -16,7 +16,7 @@ export async function unuseCommand(
 ): Promise<void> {
   const cwd = process.cwd();
   
-  console.log(chalk.cyan(`\n🔗 linkr unuse: ${packageName}\n`));
+  console.log(chalk.cyan(`\n🔗 monolink unuse: ${packageName}\n`));
   
   // Check if linked
   if (!isPackageLinked(cwd, packageName)) {

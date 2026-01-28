@@ -7,8 +7,8 @@ node_modules/
 # Build output
 dist/
 
-# Local linkr config (in target projects)
-.linkr-local.json
+# Local monolink config (in target projects)
+.monolink-local.json
 
 # Lock files (remove this line if you want to keep the lockfile)
 pnpm-lock.yaml

@@ -19,7 +19,7 @@ export async function listCommand(options: ListOptions): Promise<void> {
     if (linkedPackages.length === 0) {
       console.log(chalk.gray('  No packages are currently linked'));
       console.log(chalk.gray('\n  To link a package, run:'));
-      console.log(chalk.cyan('    npx linkr use <package-name>'));
+      console.log(chalk.cyan('    npx monolink use <package-name>'));
       return;
     }
     
@@ -28,7 +28,7 @@ export async function listCommand(options: ListOptions): Promise<void> {
     });
     
     console.log(chalk.gray('\n  To unlink a package, run:'));
-    console.log(chalk.cyan('    npx linkr unuse <package-name>'));
+    console.log(chalk.cyan('    npx monolink unuse <package-name>'));
     return;
   }
   
@@ -40,7 +40,7 @@ export async function listCommand(options: ListOptions): Promise<void> {
   if (packages.length === 0) {
     console.log(chalk.gray('  No packages are registered'));
     console.log(chalk.gray('\n  To register a package, run in a monorepo:'));
-    console.log(chalk.cyan('    npx linkr register <package-name>'));
+    console.log(chalk.cyan('    npx monolink register <package-name>'));
     return;
   }
   

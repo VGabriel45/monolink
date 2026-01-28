@@ -1,11 +1,15 @@
 {
-  "name": "linkr",
+  "name": "monolink",
   "version": "1.0.0",
   "description": "CLI tool to simplify local pnpm package linking in monorepos",
   "type": "module",
   "bin": {
-    "linkr": "./dist/index.js"
+    "monolink": "./dist/index.js"
   },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",

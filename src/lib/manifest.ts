@@ -3,7 +3,7 @@ import path from 'node:path';
 import os from 'node:os';
 import type { LinkManifest, RegisteredPackage } from '../types.js';
 
-const MANIFEST_DIR = path.join(os.homedir(), '.linkr');
+const MANIFEST_DIR = path.join(os.homedir(), '.monolink');
 const MANIFEST_PATH = path.join(MANIFEST_DIR, 'manifest.json');
 
 export function ensureManifestDir(): void {

@@ -13,7 +13,7 @@ import {
 const program = new Command();
 
 program
-  .name('linkr')
+  .name('monolink')
   .description('CLI tool to simplify local pnpm package linking in monorepos')
   .version('1.0.0');
 
