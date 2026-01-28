@@ -98,21 +98,21 @@ export function topologicalSort(graph: Map<string, string[]>): string[] {
   const inDegree = new Map<string, number>();
   const result: string[] = [];
   
-  // Initialize in-degree for all nodes
-  for (const node of graph.keys()) {
-    if (!inDegree.has(node)) {
-      inDegree.set(node, 0);
-    }
+  // Initialize in-degree as the count of each package's own dependencies
+  for (const [node, deps] of graph.entries()) {
+    inDegree.set(node, deps.length);
   }
   
-  // Calculate in-degrees
+  // Ensure all dependencies are in the map (they might not be keys)
   for (const deps of graph.values()) {
     for (const dep of deps) {
-      inDegree.set(dep, (inDegree.get(dep) || 0) + 1);
+      if (!inDegree.has(dep)) {
+        inDegree.set(dep, 0);
+      }
     }
   }
   
-  // Find all nodes with no dependencies
+  // Find all nodes with no dependencies (can be built first)
   const queue: string[] = [];
   for (const [node, degree] of inDegree.entries()) {
     if (degree === 0) {
@@ -125,10 +125,10 @@ export function topologicalSort(graph: Map<string, string[]>): string[] {
     const node = queue.shift()!;
     result.push(node);
     
-    // For each node that depends on current node
+    // For each package that depends on current node, decrement their in-degree
     for (const [pkg, deps] of graph.entries()) {
       if (deps.includes(node)) {
-        const newDegree = (inDegree.get(pkg) || 1) - 1;
+        const newDegree = inDegree.get(pkg)! - 1;
         inDegree.set(pkg, newDegree);
         
         if (newDegree === 0) {
@@ -139,7 +139,7 @@ export function topologicalSort(graph: Map<string, string[]>): string[] {
   }
   
   // Check for cycles
-  if (result.length !== graph.size) {
+  if (result.length !== inDegree.size) {
     throw new Error('Circular dependency detected in workspace packages');
   }
   
