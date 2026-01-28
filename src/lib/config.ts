@@ -9,6 +9,7 @@ const LINKR_CONFIG_FILE = '.monolink-local.json';
 interface LocalLinkConfig {
   linkedPackages: string[];
   originalOverrides?: Record<string, string>;
+  addedDependencies?: string[]; // Track which deps we added (to remove on unlink)
 }
 
 /**
@@ -80,12 +81,28 @@ export function applyLinkConfig(
     localConfig.originalOverrides = (pkgJson as any).pnpm?.overrides || {};
   }
   
+  // Initialize added dependencies tracking
+  if (!localConfig.addedDependencies) {
+    localConfig.addedDependencies = [];
+  }
+  
   // Add package to tracked list
   if (!localConfig.linkedPackages.includes(packageName)) {
     localConfig.linkedPackages.push(packageName);
   }
   
-  // Apply overrides
+  // Add main package to dependencies if not already present
+  if (!pkgJson.dependencies) {
+    pkgJson.dependencies = {};
+  }
+  
+  // Only add the main package to dependencies (not workspace deps - those are handled by overrides)
+  if (!pkgJson.dependencies[packageName]) {
+    pkgJson.dependencies[packageName] = config.dependencies[packageName];
+    localConfig.addedDependencies.push(packageName);
+  }
+  
+  // Apply overrides for main package and all workspace deps
   if (!(pkgJson as any).pnpm) {
     (pkgJson as any).pnpm = {};
   }
@@ -123,6 +140,17 @@ export function removeLinkConfig(
   
   // Get all packages that need to be unlinked
   const packagesToRemove = [pkg.name, ...pkg.workspaceDeps.map(d => d.name)];
+  
+  // Remove the dependency we added (if we added it)
+  if (localConfig.addedDependencies?.includes(packageName) && pkgJson.dependencies) {
+    delete pkgJson.dependencies[packageName];
+    localConfig.addedDependencies = localConfig.addedDependencies.filter(d => d !== packageName);
+    
+    // Clean up empty dependencies object
+    if (Object.keys(pkgJson.dependencies).length === 0) {
+      delete pkgJson.dependencies;
+    }
+  }
   
   // Remove overrides for this package and its deps
   if ((pkgJson as any).pnpm?.overrides) {
