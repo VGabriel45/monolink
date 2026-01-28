@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+
+# pnpm store
+.pnpm-store/
+
+# Build output
+dist/
+
+# Local linkr config (in target projects)
+.linkr-local.json
+
+# Lock files (remove this line if you want to keep the lockfile)
+pnpm-lock.yaml
+
+# OS files
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
