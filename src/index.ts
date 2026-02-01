@@ -2,6 +2,9 @@
 
 import chalk from "chalk";
 import { Command } from "commander";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { dirname, join } from "node:path";
 import {
 	listCommand,
 	registerCommand,
@@ -10,12 +13,21 @@ import {
 	watchCommand,
 } from "./commands/index.js";
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Read version from package.json
+const packageJson = JSON.parse(
+	readFileSync(join(__dirname, "../package.json"), "utf-8"),
+);
+const version = packageJson.version || "1.0.0";
+
 const program = new Command();
 
 program
 	.name("monolink")
 	.description("CLI tool to simplify local pnpm package linking in monorepos")
-	.version("1.0.0");
+	.version(version);
 
 // Register command
 program
