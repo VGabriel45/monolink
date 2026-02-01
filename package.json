@@ -1,43 +1,47 @@
 {
-  "name": "monolink",
-  "version": "1.1.0",
-  "description": "CLI tool to simplify local pnpm package linking in monorepos",
-  "type": "module",
-  "bin": {
-    "monolink": "./dist/index.js"
-  },
-  "files": [
-    "dist",
-    "README.md"
-  ],
-  "scripts": {
-    "build": "tsc",
-    "dev": "tsc --watch",
-    "start": "node dist/index.js",
-    "prepublishOnly": "npm run build"
-  },
-  "keywords": [
-    "pnpm",
-    "monorepo",
-    "link",
-    "workspace",
-    "cli"
-  ],
-  "author": "",
-  "license": "MIT",
-  "dependencies": {
-    "chalk": "^5.3.0",
-    "chokidar": "^3.5.3",
-    "commander": "^12.1.0",
-    "glob": "^10.3.10",
-    "inquirer": "^10.2.2",
-    "yaml": "^2.3.4"
-  },
-  "devDependencies": {
-    "@types/node": "^20.10.0",
-    "typescript": "^5.3.0"
-  },
-  "engines": {
-    "node": ">=18.0.0"
-  }
+	"name": "monolink",
+	"version": "1.1.1",
+	"description": "CLI tool to simplify local pnpm package linking in monorepos",
+	"type": "module",
+	"bin": {
+		"monolink": "./dist/index.js"
+	},
+	"files": [
+		"dist",
+		"README.md"
+	],
+	"scripts": {
+		"build": "tsc",
+		"dev": "tsc --watch",
+		"start": "node dist/index.js",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write .",
+		"format": "biome format --write .",
+		"prepublishOnly": "npm run build"
+	},
+	"keywords": [
+		"pnpm",
+		"monorepo",
+		"link",
+		"workspace",
+		"cli"
+	],
+	"author": "",
+	"license": "MIT",
+	"dependencies": {
+		"chalk": "^5.3.0",
+		"chokidar": "^3.5.3",
+		"commander": "^12.1.0",
+		"glob": "^10.3.10",
+		"inquirer": "^10.2.2",
+		"yaml": "^2.3.4"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.3.13",
+		"@types/node": "^20.10.0",
+		"typescript": "^5.3.0"
+	},
+	"engines": {
+		"node": ">=18.0.0"
+	}
 }
