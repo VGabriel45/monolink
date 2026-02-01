@@ -1,10 +1,14 @@
 {
 	"name": "monolink",
-	"version": "1.1.3",
+	"version": "1.1.4",
 	"description": "CLI tool to simplify local pnpm package linking in monorepos",
 	"type": "module",
 	"bin": {
 		"monolink": "./dist/index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/VGabriel45/monolink.git"
 	},
 	"files": [
 		"dist",
