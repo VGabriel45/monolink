@@ -97,7 +97,7 @@ export async function useCommand(
 
 	// Install dependencies
 	if (!options.noInstall) {
-		console.log(chalk.cyan("\n📦 Installing dependencies...\n"));
+		console.log(); // Add spacing
 		const installSuccess = await installDependencies(cwd);
 
 		if (!installSuccess) {

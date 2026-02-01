@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
 import path from "node:path";
 import chalk from "chalk";
+import ora from "ora";
 import { getPackagesInBuildOrder } from "./deps.js";
 import { readPackageJson, resolveWorkspacePaths } from "./workspace.js";
 
@@ -54,15 +55,18 @@ export async function buildPackage(
 		return true;
 	}
 
-	console.log(chalk.blue(`  ◐ Building ${packageName}...`));
+	const spinner = ora({
+		text: `Building ${packageName}...`,
+		color: "blue",
+	}).start();
 
 	const result = await runCommand("pnpm", ["run", "build"], packagePath);
 
 	if (result.success) {
-		console.log(chalk.green(`  ✓ ${packageName} built successfully`));
+		spinner.succeed(chalk.green(`${packageName} built successfully`));
 		return true;
 	} else {
-		console.log(chalk.red(`  ✗ ${packageName} build failed:`));
+		spinner.fail(chalk.red(`${packageName} build failed`));
 		console.log(chalk.gray(result.output));
 		return false;
 	}
@@ -75,18 +79,20 @@ export async function buildPackagesInOrder(
 	monorepoRoot: string,
 	targetPackage: string,
 ): Promise<boolean> {
-	console.log(chalk.cyan("\n📦 Analyzing dependencies...\n"));
+	const analyzeSpinner = ora({
+		text: "Analyzing dependencies...",
+		color: "cyan",
+	}).start();
 
 	const buildOrder = await getPackagesInBuildOrder(monorepoRoot, targetPackage);
 	const workspacePaths = await resolveWorkspacePaths(monorepoRoot);
 
-	console.log(chalk.cyan("Build order:"));
+	analyzeSpinner.stop();
+	console.log(chalk.cyan("\n📦 Build order:"));
 	buildOrder.forEach((pkg, i) => {
 		console.log(chalk.gray(`  ${i + 1}. ${pkg}`));
 	});
 	console.log();
-
-	console.log(chalk.cyan("🔨 Building packages...\n"));
 
 	for (const pkgName of buildOrder) {
 		const pkgPath = workspacePaths.get(pkgName);
@@ -110,15 +116,18 @@ export async function buildPackagesInOrder(
  * Install dependencies in a directory
  */
 export async function installDependencies(cwd: string): Promise<boolean> {
-	console.log(chalk.blue("  ◐ Installing dependencies..."));
+	const spinner = ora({
+		text: "Installing dependencies...",
+		color: "blue",
+	}).start();
 
 	const result = await runCommand("pnpm", ["install"], cwd);
 
 	if (result.success) {
-		console.log(chalk.green("  ✓ Dependencies installed"));
+		spinner.succeed(chalk.green("Dependencies installed"));
 		return true;
 	} else {
-		console.log(chalk.red("  ✗ Failed to install dependencies:"));
+		spinner.fail(chalk.red("Failed to install dependencies"));
 		console.log(chalk.gray(result.output));
 		return false;
 	}

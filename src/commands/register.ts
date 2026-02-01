@@ -1,5 +1,6 @@
 import chalk from "chalk";
 import inquirer from "inquirer";
+import ora from "ora";
 import {
 	buildPackagesInOrder,
 	findMonorepoRoot,
@@ -61,7 +62,14 @@ export async function registerCommand(
 	console.log(chalk.gray(`Monorepo root: ${monorepoRoot}`));
 
 	// Find the package
+	const findSpinner = ora({
+		text: "Finding package in workspace...",
+		color: "cyan",
+	}).start();
+
 	const pkg = await getWorkspacePackage(monorepoRoot, packageName);
+
+	findSpinner.stop();
 
 	if (!pkg) {
 		console.log(chalk.red(`✗ Package "${packageName}" not found in workspace`));
@@ -89,7 +97,14 @@ export async function registerCommand(
 	console.log(chalk.gray(`Package path: ${pkg.path}`));
 
 	// Get all workspace dependencies
+	const depsSpinner = ora({
+		text: "Analyzing workspace dependencies...",
+		color: "cyan",
+	}).start();
+
 	const workspaceDeps = await getUniqueWorkspaceDeps(monorepoRoot, packageName);
+
+	depsSpinner.stop();
 
 	if (workspaceDeps.length > 0) {
 		console.log(chalk.cyan("\nWorkspace dependencies:"));
