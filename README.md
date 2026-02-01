@@ -30,6 +30,10 @@ npx monolink <command>
 
 ```bash
 cd ~/projects/my-monorepo
+# Interactive: shows list of packages to choose from
+npx monolink register
+
+# Or specify the package name directly
 npx monolink register my-package
 ```
 
@@ -42,6 +46,10 @@ This will:
 
 ```bash
 cd ~/projects/my-app
+# Interactive: shows list of registered packages to choose from
+npx monolink use
+
+# Or specify the package name directly
 npx monolink use my-package
 ```
 
@@ -52,16 +60,24 @@ This will:
 ### 3. Unlink When Done
 
 ```bash
+# Interactive: shows list of linked packages to choose from
+npx monolink unuse
+
+# Or specify the package name directly
 npx monolink unuse my-package
 ```
 
 ## Commands
 
-### `monolink register <package>`
+### `monolink register [package]`
 
 Register a package from a pnpm monorepo for local linking.
 
 ```bash
+# Interactive: shows list of workspace packages to choose from
+monolink register
+
+# Or specify the package name directly
 monolink register 0xtrails
 
 # Skip building
@@ -74,11 +90,15 @@ monolink register 0xtrails --no-build
 3. Builds all packages in topological order
 4. Saves package info to `~/.monolink/manifest.json`
 
-### `monolink use <package>`
+### `monolink use [package]`
 
 Link a registered package to your current project.
 
 ```bash
+# Interactive: shows list of registered packages to choose from
+monolink use
+
+# Or specify the package name directly
 monolink use 0xtrails
 
 # Skip pnpm install
@@ -90,11 +110,15 @@ monolink use 0xtrails --no-install
 2. Adds `pnpm.overrides` to your `package.json`
 3. Runs `pnpm install`
 
-### `monolink unuse <package>`
+### `monolink unuse [package]`
 
 Remove a linked package from your project.
 
 ```bash
+# Interactive: shows list of linked packages to choose from
+monolink unuse
+
+# Or specify the package name directly
 monolink unuse 0xtrails
 
 # Skip pnpm install
@@ -118,11 +142,15 @@ monolink list
 monolink list --local
 ```
 
-### `monolink watch <package>`
+### `monolink watch [package]`
 
 Watch and rebuild a registered package on source changes.
 
 ```bash
+# Interactive: shows list of registered packages to choose from
+monolink watch
+
+# Or specify the package name directly
 monolink watch 0xtrails
 
 # Custom debounce delay
@@ -231,10 +259,11 @@ monolink use @myorg/sdk
 
 ## Tips
 
-1. **Add `.monolink-local.json` to your `.gitignore`** - It's project-specific state
-2. **Re-register after major changes** - Run `monolink register` again to rebuild
-3. **Use watch mode during development** - `monolink watch` rebuilds automatically
-4. **Multiple packages** - You can link multiple packages in the same project
+1. **Interactive mode** - Run any command without a package name to see an interactive list to choose from
+2. **Add `.monolink-local.json` to your `.gitignore`** - It's project-specific state
+3. **Re-register after major changes** - Run `monolink register` again to rebuild
+4. **Use watch mode during development** - `monolink watch` rebuilds automatically
+5. **Multiple packages** - You can link multiple packages in the same project
 
 ## Requirements
 
