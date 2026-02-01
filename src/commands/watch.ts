@@ -1,21 +1,53 @@
 import path from 'node:path';
 import chalk from 'chalk';
+import inquirer from 'inquirer';
 import chokidar from 'chokidar';
 import {
   getRegisteredPackage,
   resolveWorkspacePaths,
   buildPackage,
+  listRegisteredPackages,
 } from '../lib/index.js';
 
 interface WatchOptions {
   debounce?: number;
 }
 
+async function selectRegisteredPackage(): Promise<string> {
+  const packages = listRegisteredPackages();
+  
+  if (packages.length === 0) {
+    console.log(chalk.red('✗ No packages are registered'));
+    console.log(chalk.gray('\nTo register a package, run in the source monorepo:'));
+    console.log(chalk.cyan('  npx monolink register <package-name>'));
+    process.exit(1);
+  }
+  
+  const { selectedPackage } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'selectedPackage',
+      message: 'Select a package to watch:',
+      choices: packages.map(pkg => ({
+        name: `${pkg.name} (${pkg.packagePath})`,
+        value: pkg.name,
+      })),
+    },
+  ]);
+  
+  return selectedPackage;
+}
+
 export async function watchCommand(
-  packageName: string,
+  packageName: string | undefined,
   options: WatchOptions
 ): Promise<void> {
   const debounceMs = options.debounce || 300;
+  
+  // If no package name provided, show interactive list
+  if (!packageName) {
+    packageName = await selectRegisteredPackage();
+  }
   
   console.log(chalk.cyan(`\n👀 monolink watch: ${packageName}\n`));
   

@@ -1,21 +1,53 @@
 import chalk from 'chalk';
+import inquirer from 'inquirer';
 import {
   getRegisteredPackage,
   generateLinkConfig,
   applyLinkConfig,
   isPackageLinked,
   installDependencies,
+  listRegisteredPackages,
 } from '../lib/index.js';
 
 interface UseOptions {
   noInstall?: boolean;
 }
 
+async function selectRegisteredPackage(): Promise<string> {
+  const packages = listRegisteredPackages();
+  
+  if (packages.length === 0) {
+    console.log(chalk.red('✗ No packages are registered'));
+    console.log(chalk.gray('\nTo register a package, run in the source monorepo:'));
+    console.log(chalk.cyan('  npx monolink register <package-name>'));
+    process.exit(1);
+  }
+  
+  const { selectedPackage } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'selectedPackage',
+      message: 'Select a package to link:',
+      choices: packages.map(pkg => ({
+        name: `${pkg.name} (${pkg.packagePath})`,
+        value: pkg.name,
+      })),
+    },
+  ]);
+  
+  return selectedPackage;
+}
+
 export async function useCommand(
-  packageName: string,
+  packageName: string | undefined,
   options: UseOptions
 ): Promise<void> {
   const cwd = process.cwd();
+  
+  // If no package name provided, show interactive list
+  if (!packageName) {
+    packageName = await selectRegisteredPackage();
+  }
   
   console.log(chalk.cyan(`\n🔗 monolink use: ${packageName}\n`));
   

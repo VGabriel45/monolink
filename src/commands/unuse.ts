@@ -1,20 +1,50 @@
 import chalk from 'chalk';
+import inquirer from 'inquirer';
 import {
   getRegisteredPackage,
   removeLinkConfig,
   isPackageLinked,
   installDependencies,
+  getLinkedPackages,
 } from '../lib/index.js';
 
 interface UnuseOptions {
   noInstall?: boolean;
 }
 
+async function selectLinkedPackage(cwd: string): Promise<string> {
+  const linkedPackages = getLinkedPackages(cwd);
+  
+  if (linkedPackages.length === 0) {
+    console.log(chalk.yellow('⚠ No packages are linked in this project'));
+    process.exit(0);
+  }
+  
+  const { selectedPackage } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'selectedPackage',
+      message: 'Select a package to unlink:',
+      choices: linkedPackages.map(name => ({
+        name: name,
+        value: name,
+      })),
+    },
+  ]);
+  
+  return selectedPackage;
+}
+
 export async function unuseCommand(
-  packageName: string,
+  packageName: string | undefined,
   options: UnuseOptions
 ): Promise<void> {
   const cwd = process.cwd();
+  
+  // If no package name provided, show interactive list
+  if (!packageName) {
+    packageName = await selectLinkedPackage(cwd);
+  }
   
   console.log(chalk.cyan(`\n🔗 monolink unuse: ${packageName}\n`));
   

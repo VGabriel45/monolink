@@ -1,6 +1,6 @@
 {
   "name": "monolink",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "CLI tool to simplify local pnpm package linking in monorepos",
   "type": "module",
   "bin": {
@@ -30,6 +30,7 @@
     "chokidar": "^3.5.3",
     "commander": "^12.1.0",
     "glob": "^10.3.10",
+    "inquirer": "^10.2.2",
     "yaml": "^2.3.4"
   },
   "devDependencies": {

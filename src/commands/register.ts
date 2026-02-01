@@ -1,24 +1,48 @@
 import path from 'node:path';
 import chalk from 'chalk';
+import inquirer from 'inquirer';
 import {
   findMonorepoRoot,
   getWorkspacePackage,
   registerPackage,
   getUniqueWorkspaceDeps,
   buildPackagesInOrder,
+  resolveWorkspacePaths,
 } from '../lib/index.js';
 
 interface RegisterOptions {
   noBuild?: boolean;
 }
 
+async function selectPackage(monorepoRoot: string): Promise<string> {
+  const allPackages = await resolveWorkspacePaths(monorepoRoot);
+  const packageNames = Array.from(allPackages.keys()).sort();
+  
+  if (packageNames.length === 0) {
+    console.log(chalk.red('✗ No packages found in workspace'));
+    process.exit(1);
+  }
+  
+  const { selectedPackage } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'selectedPackage',
+      message: 'Select a package to register:',
+      choices: packageNames.map(name => ({
+        name: name,
+        value: name,
+      })),
+    },
+  ]);
+  
+  return selectedPackage;
+}
+
 export async function registerCommand(
-  packageName: string,
+  packageName: string | undefined,
   options: RegisterOptions
 ): Promise<void> {
   const cwd = process.cwd();
-  
-  console.log(chalk.cyan(`\n🔗 monolink register: ${packageName}\n`));
   
   // Find monorepo root
   const monorepoRoot = findMonorepoRoot(cwd);
@@ -29,6 +53,12 @@ export async function registerCommand(
     process.exit(1);
   }
   
+  // If no package name provided, show interactive list
+  if (!packageName) {
+    packageName = await selectPackage(monorepoRoot);
+  }
+  
+  console.log(chalk.cyan(`\n🔗 monolink register: ${packageName}\n`));
   console.log(chalk.gray(`Monorepo root: ${monorepoRoot}`));
   
   // Find the package
@@ -36,6 +66,18 @@ export async function registerCommand(
   
   if (!pkg) {
     console.log(chalk.red(`✗ Package "${packageName}" not found in workspace`));
+    
+    // Show available packages for debugging
+    const allPackages = await resolveWorkspacePaths(monorepoRoot);
+    if (allPackages.size > 0) {
+      console.log(chalk.yellow('\nAvailable packages in workspace:'));
+      Array.from(allPackages.keys()).sort().forEach(name => {
+        console.log(chalk.gray(`  • ${name}`));
+      });
+    } else {
+      console.log(chalk.yellow('\n⚠ No packages found in workspace. Check your pnpm-workspace.yaml patterns.'));
+    }
+    
     process.exit(1);
   }
   

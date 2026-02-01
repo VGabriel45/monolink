@@ -19,10 +19,10 @@ program
 
 // Register command
 program
-  .command('register <package>')
-  .description('Register a package for local linking')
+  .command('register [package]')
+  .description('Register a package for local linking (interactive if package not provided)')
   .option('--no-build', 'Skip building packages')
-  .action(async (packageName: string, options) => {
+  .action(async (packageName: string | undefined, options) => {
     try {
       await registerCommand(packageName, options);
     } catch (err) {
@@ -33,10 +33,10 @@ program
 
 // Use command
 program
-  .command('use <package>')
-  .description('Link a registered package to the current project')
+  .command('use [package]')
+  .description('Link a registered package to the current project (interactive if package not provided)')
   .option('--no-install', 'Skip running pnpm install')
-  .action(async (packageName: string, options) => {
+  .action(async (packageName: string | undefined, options) => {
     try {
       await useCommand(packageName, options);
     } catch (err) {
@@ -47,10 +47,10 @@ program
 
 // Unuse command
 program
-  .command('unuse <package>')
-  .description('Remove a linked package from the current project')
+  .command('unuse [package]')
+  .description('Remove a linked package from the current project (interactive if package not provided)')
   .option('--no-install', 'Skip running pnpm install')
-  .action(async (packageName: string, options) => {
+  .action(async (packageName: string | undefined, options) => {
     try {
       await unuseCommand(packageName, options);
     } catch (err) {
@@ -76,10 +76,10 @@ program
 
 // Watch command
 program
-  .command('watch <package>')
-  .description('Watch and rebuild a registered package on changes')
+  .command('watch [package]')
+  .description('Watch and rebuild a registered package on changes (interactive if package not provided)')
   .option('-d, --debounce <ms>', 'Debounce delay in milliseconds', '300')
-  .action(async (packageName: string, options) => {
+  .action(async (packageName: string | undefined, options) => {
     try {
       await watchCommand(packageName, {
         debounce: parseInt(options.debounce, 10),
