@@ -8,6 +8,7 @@ import { Command } from "commander";
 import {
 	listCommand,
 	registerCommand,
+	unregisterCommand,
 	unuseCommand,
 	useCommand,
 	watchCommand,
@@ -71,6 +72,21 @@ program
 	.action(async (packageName: string | undefined, options) => {
 		try {
 			await unuseCommand(packageName, options);
+		} catch (err) {
+			console.error(chalk.red(`\n✗ Error: ${(err as Error).message}`));
+			process.exit(1);
+		}
+	});
+
+// Unregister command
+program
+	.command("unregister [package]")
+	.description(
+		"Unregister a package from monolink (interactive if package not provided)",
+	)
+	.action(async (packageName: string | undefined) => {
+		try {
+			await unregisterCommand(packageName);
 		} catch (err) {
 			console.error(chalk.red(`\n✗ Error: ${(err as Error).message}`));
 			process.exit(1);

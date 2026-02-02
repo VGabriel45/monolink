@@ -130,6 +130,22 @@ monolink unuse 0xtrails --no-install
 2. Cleans up `.monolink-local.json`
 3. Runs `pnpm install`
 
+### `monolink unregister [package]`
+
+Unregister a package from monolink (removes it from the global manifest).
+
+```bash
+# Interactive: shows list of registered packages to choose from
+monolink unregister
+
+# Or specify the package name directly
+monolink unregister 0xtrails
+```
+
+**What it does:**
+1. Removes the package from `~/.monolink/manifest.json`
+2. Does not affect projects that are already using the package
+
 ### `monolink list`
 
 List all registered packages.
