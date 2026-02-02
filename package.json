@@ -1,6 +1,6 @@
 {
 	"name": "monolink",
-	"version": "1.1.4",
+	"version": "1.2.0",
 	"description": "CLI tool to simplify local pnpm package linking in monorepos",
 	"type": "module",
 	"bin": {
